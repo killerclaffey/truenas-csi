@@ -20,8 +20,8 @@ import (
 // Default configuration values
 const (
 	defaultCallTimeout         = 30 * time.Second
-	defaultPingInterval        = 30 * time.Second
-	defaultPingTimeout         = 10 * time.Second
+	defaultPingInterval        = 60 * time.Second
+	defaultPingTimeout         = 30 * time.Second
 	defaultDialTimeout         = 30 * time.Second
 	defaultTLSHandshakeTimeout = 10 * time.Second
 	defaultReconnectMin        = 1 * time.Second

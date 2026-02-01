@@ -294,6 +294,7 @@ func NewDriver(config *DriverConfig) (*Driver, error) {
 		APIKey:             config.TrueNASAPIKey,
 		InsecureSkipVerify: config.TrueNASInsecure,
 		Logger:             config.Logger,
+		PingInterval:       15 * time.Second, // Keep connection alive (TrueNAS/firewall may timeout idle connections)
 	}
 
 	truenasClient := client.New(cfg)

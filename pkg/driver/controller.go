@@ -512,8 +512,11 @@ func (s *ControllerServer) createISCSIVolume(ctx context.Context, volumeID, data
 		if initiators != "" {
 			initOpts.Initiators = strings.Split(initiators, ",")
 		}
+		// NOTE: networks parameter is currently not supported by TrueNAS SCALE API
+		// iscsi.initiator.create only supports 'initiators' and 'comment' fields
+		// Network filtering should be configured at the target/portal level if needed
 		if networks != "" {
-			initOpts.AuthNetwork = strings.Split(networks, ",")
+			s.driver.Log().V(LogLevelInfo).Info("iscsi.networks parameter is not supported by TrueNAS API and will be ignored", "networks", networks)
 		}
 
 		init, err := s.driver.Client().CreateISCSIInitiator(ctx, initOpts)
@@ -526,7 +529,7 @@ func (s *ControllerServer) createISCSIVolume(ctx context.Context, volumeID, data
 			return nil, fmt.Errorf("failed to create initiator group: %w", err)
 		}
 		initiatorID = init.ID
-		s.driver.Log().V(LogLevelDebug).Info("Created initiator group for iSCSI target", "initiatorId", initiatorID, "initiators", initiators, "networks", networks)
+		s.driver.Log().V(LogLevelDebug).Info("Created initiator group for iSCSI target", "initiatorId", initiatorID, "initiators", initiators)
 	}
 
 	iqnBase := s.driver.GetISCSIIQNBaseFromParameters(parameters)

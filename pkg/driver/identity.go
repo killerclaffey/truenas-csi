@@ -48,12 +48,17 @@ func (s *IdentityServer) GetPluginCapabilities(ctx context.Context, req *csi.Get
 	}, nil
 }
 
-// Probe checks if the driver is healthy by testing the TrueNAS connection.
+// Probe checks if the driver is healthy by verifying the TrueNAS connection status.
+// We only check if the client is connected rather than actively pinging TrueNAS
+// on every probe call. The client has its own background ping loop that handles
+// connection health monitoring and automatic reconnection.
 func (s *IdentityServer) Probe(ctx context.Context, req *csi.ProbeRequest) (*csi.ProbeResponse, error) {
 	s.driver.Log().V(LogLevelDebug).Info("Probe called")
 
-	if err := s.driver.client.Ping(ctx); err != nil {
-		s.driver.Log().Error(err, "Health check failed")
+	// Check if the client is connected - don't actively ping on every probe
+	// as this can cause timeouts during high load or network latency
+	if !s.driver.client.Connected() {
+		s.driver.Log().Error(nil, "Health check failed", "reason", "not connected to TrueNAS")
 		return nil, status.Error(codes.FailedPrecondition, "TrueNAS connection failed")
 	}
 

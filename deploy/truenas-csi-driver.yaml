@@ -250,10 +250,10 @@ spec:
             httpGet:
               path: /healthz
               port: 9808
-            initialDelaySeconds: 10
-            timeoutSeconds: 3
-            periodSeconds: 10
-            failureThreshold: 5
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+            periodSeconds: 30
+            failureThreshold: 6
 
         # CSI Provisioner
         - name: csi-provisioner
@@ -435,10 +435,10 @@ spec:
             httpGet:
               path: /healthz
               port: 9808
-            initialDelaySeconds: 10
-            timeoutSeconds: 3
-            periodSeconds: 10
-            failureThreshold: 5
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+            periodSeconds: 30
+            failureThreshold: 6
 
         # Node Driver Registrar
         - name: csi-node-driver-registrar
